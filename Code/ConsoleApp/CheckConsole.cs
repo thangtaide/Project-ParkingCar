@@ -8,7 +8,7 @@ namespace ConsoleApp
         public string CheckCardID()
         {
             CheckInOutBl bl = new CheckInOutBl();
-            Console.Write("Card ID: ");
+            Console.Write("     Card ID: ");
             int cardId = -1;
             var strID = string.Empty;
             ConsoleKeyInfo keyInfo;
@@ -30,7 +30,7 @@ namespace ConsoleApp
                 Console.WriteLine();
                 return strID;
             }else {
-                Console.WriteLine("\nCard ID is not exist!");
+                Console.WriteLine("\n     Card ID is not exist!");
                 return null; //  Card ID is not exist
             }
         }
@@ -44,37 +44,39 @@ namespace ConsoleApp
         public string CheckLicensePlate(int cardId)
         {
             CheckInOutBl bl = new CheckInOutBl();
-            Console.Write("License plate: ");
+            Console.Write("     License plate: ");
             string licensePlate = Console.ReadLine().ToUpper();
             if(bl.CheckLicensePlate(cardId, licensePlate)){
                 return licensePlate;
             }else {
-                Console.WriteLine("Wrong license plate!");
+                Console.WriteLine("     Wrong license plate!");
                 return null;
             }
         }
         public string SaveLicensePlate(int id)
         {
             CheckInOutBl bl =  new CheckInOutBl();
-            Console.Write("License plate: ");
+            Console.Write("     License plate: ");
             string licensePlate = Console.ReadLine().ToUpper();
             bl.SaveLicensePlate(id, licensePlate);
             return licensePlate;
         }
-        public void SaveCheckIn(int cardId, int UserId ,string licensePlate){
+        public bool SaveCheckIn(int cardId, int UserId ,string licensePlate){
             CheckInOutBl bl =  new CheckInOutBl();
             if(bl.CheckSaveCheckIn(licensePlate)){
-                Console.WriteLine("Check-in fail. This car has been check-in!");
+                Console.WriteLine("     Check-in fail. This car has been check-in!");
+                return false;
             }
             else{
                 bl.SaveCheckIn(cardId, UserId, licensePlate);
-                Console.WriteLine("Successful check-in!");
+                Console.WriteLine("     Successful check-in!");
+                return true;
             }
         }
         public int CheckOutLicensePlate(int cardId)
         {
             CheckInOutBl bl = new CheckInOutBl();
-            Console.Write("License plate: ");
+            Console.Write("     License plate: ");
             string licensePlate = Console.ReadLine().ToUpper();
             int inOutId = bl.CheckOutLicensePlate(cardId, licensePlate);
             return inOutId;
@@ -84,14 +86,13 @@ namespace ConsoleApp
             CheckInOutBl bl =  new CheckInOutBl();
             
             bl.SaveCheckOutTime(cardId, UserId);
-            Console.WriteLine("Successful check-out!");
+            Console.WriteLine("     Successful check-out!");
         }
 
         public void SaveCheckOut(int inOutId, int price){
             CheckInOutBl bl =  new CheckInOutBl();
             
             bl.SaveCheckOut(inOutId, price);
-            Console.WriteLine("Successful check-out!");
         }
     }
 }

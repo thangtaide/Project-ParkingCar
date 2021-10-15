@@ -19,38 +19,47 @@ namespace ConsoleApp
             PriceBl pBl =  new PriceBl();
             do{
                 Console.Clear();
-                Console.WriteLine("=================================");
-                Console.WriteLine("       CAR PARKING MANAGEMENT ");
-                Console.WriteLine("=================================");
-                Console.WriteLine("              Login");
-                Console.WriteLine("=================================");
+                Console.WriteLine("===========================================================");
+                Console.WriteLine("                   CAR PARKING MANAGEMENT ");
+                Console.WriteLine("===========================================================");
+                Console.WriteLine("                          Login");
+                Console.WriteLine("===========================================================");
                 UserId = loginU.CheckLogin();
-                if(UserId < 0) Console.WriteLine("Please try again!");
+                if(UserId < 0) Console.WriteLine("      Please try again!");
                 Console.ReadKey();
             }while(UserId < 0);
             string choose = null;
             while (choose != "4")
             {
                 Console.Clear();
-                Console.WriteLine("\n+----------------------------------+");
-                Console.WriteLine("|      CAR PARKING MANAGEMENT      |");
-                Console.WriteLine("+----------------------------------+");
-                Console.WriteLine("|  1. Check In                     |");
-                Console.WriteLine("|  2. Check Out                    |");
-                Console.WriteLine("|  3. Show Revenue                 |");
-                Console.WriteLine("|  4. Logout                       |");
-                Console.WriteLine("+----------------------------------+");
-                Console.Write("   Enter your choose: ");
+                Console.WriteLine("\n+------------------------------------------------------------+");
+                Console.WriteLine("|                     CAR PARKING MANAGEMENT                 |");
+                Console.WriteLine("+------------------------------------------------------------+");
+                Console.WriteLine("|         1.  Check In                                       |");
+                Console.WriteLine("|         2.  Check Out                                      |");
+                Console.WriteLine("|         3.  Show Revenue                                   |");
+                Console.WriteLine("|         4.  Logout                                         |");
+                Console.WriteLine("+------------------------------------------------------------+");
+                Console.Write("         Enter your choose: ");
                 ConsoleKeyInfo keyInfo;
-                choose = null;
+                choose = "";
                 do
                 {
                     keyInfo = Console.ReadKey(intercept: true);
-                    if (char.IsNumber(keyInfo.KeyChar))
+                    if (keyInfo.KeyChar>='1'&& keyInfo.KeyChar<='4'&&choose.Length == 0)
                     {
                         Console.Write(keyInfo.KeyChar);
+                        choose = "";
                         choose += keyInfo.KeyChar;
-                    }else if (keyInfo.Key == ConsoleKey.Backspace && choose.Length > 0)
+                    }else if(keyInfo.KeyChar>='1'&& keyInfo.KeyChar<='4'&&choose.Length == 1)
+                    {
+                        Console.Write("\b \b");
+                        choose = choose[0..^1];
+                        Console.Write(keyInfo.KeyChar);
+                        choose = "";
+                        choose += keyInfo.KeyChar;
+                    }
+                    else if (keyInfo.Key == ConsoleKey.Backspace && choose.Length > 0)
                     {
                         Console.Write("\b \b");
                         choose = choose[0..^1];
@@ -68,35 +77,38 @@ namespace ConsoleApp
                         strID = checkIn.CheckCardID();
                         if(strID == null)
                         {
-                            Console.WriteLine("Please try again!");
+                            Console.WriteLine("     Please try again!");
                             Console.ReadKey();
                         }
                     }while(strID == null);
                     Int32.TryParse(strID, out cardId);
                     if(checkIn.CheckCardUsing(cardId)){
-                        Console.WriteLine("This card is being used!");
+                        Console.WriteLine("     This card is being used!");
                     }else{
                         if(bl.CheckDailyCard(cardId))
                         {
+                            Console.WriteLine("     Daily Card");
                             licensePlate = checkIn.SaveLicensePlate(cardId);
                             checkIn.SaveCheckIn(cardId, UserId, licensePlate);
                             CheckinNumber ++;
                         }else{
                             do{
                                 Checkin();
-                                Console.WriteLine("Card ID: "+strID);
+                                Console.WriteLine("     Card ID: "+strID);
+                                Console.WriteLine("     Monthly Card");
                                 licensePlate = checkIn.CheckLicensePlate(cardId);
                                 if(licensePlate == null){
-                                    Console.WriteLine("Please try again!");
+                                    Console.WriteLine("     Please try again!");
                                     Console.ReadKey();
                                 }
                             }while(licensePlate == null);
                             if(!bl.CheckExpiryDate(cardId)){
-                                Console.WriteLine("This card is out of date! Check-in fail!");
+                                Console.WriteLine("     This card is out of date! Check-in fail!");
                             }
                             else{
-                                checkIn.SaveCheckIn(cardId, UserId, licensePlate);
-                                CheckinNumber++;
+                                if(checkIn.SaveCheckIn(cardId, UserId, licensePlate)){
+                                    CheckinNumber++;
+                                }
                             }
                         }
                     }
@@ -113,20 +125,20 @@ namespace ConsoleApp
                         strID = checkOut.CheckCardID();
                         if(strID == null)
                         {
-                            Console.WriteLine("Please try again!");
+                            Console.WriteLine("     Please try again!");
                             Console.ReadKey();
                         }
                     }while(strID == null);
                     Int32.TryParse(strID, out cardId);
                     if(!checkOut.CheckCardUsing(cardId)){
-                        Console.WriteLine("This card is not being used!");
+                        Console.WriteLine("     This card is not being used!");
                     }else{
                         do{
                             Checkout();
-                            Console.WriteLine("Card ID: "+strID);
+                            Console.WriteLine("     Card ID: "+strID);
                             inOutId = checkOut.CheckOutLicensePlate(cardId);
                             if(inOutId <= 0){
-                                Console.WriteLine("Wrong license plate!\nPlease try again!");
+                                Console.WriteLine("     Wrong license plate!\n      Please try again!");
                                 Console.ReadKey();
                             }
                         }while(inOutId <= 0);
@@ -144,6 +156,7 @@ namespace ConsoleApp
                         Revenue += price;
                         checkoutNumber++;
                         checkOut.SaveCheckOut(inOutId,price);
+                        Console.Clear();
                         ShowBill(pBl.getCheckinTime(inOutId), pBl.getCheckoutTime(inOutId),inOutId, price, pBl.getLicensePlate(inOutId));
                     }
                     Console.ReadKey();
@@ -160,16 +173,17 @@ namespace ConsoleApp
                         for(int k = text.Length-1; k>=0; k--){
                             strRevenue+=text[k];
                         }
-                        Console.WriteLine("|     Check-in     : {0,17}  |",CheckinNumber);
-                        Console.WriteLine("|     Check-out    : {0,17}  |",checkoutNumber);
-                        Console.WriteLine("|     Revenue(VND) : {0,17}  |",strRevenue);
-                        Console.WriteLine("+---------------------------------------+");
+                        Console.WriteLine("|     Check-in       :   {0,39}  |",CheckinNumber);
+                        Console.WriteLine("|     Check-out      :   {0,39}  |",checkoutNumber);
+                        Console.WriteLine("|     Revenue (VND)  :   {0,39}  |",strRevenue);
+                        Console.WriteLine("+-----------------------------------------------------------------+");
                     Console.ReadKey();
                     break;
 
                 case "4":
-                    Console.WriteLine("\nLogout and end shift. Do you want to continue?(Y/N)");
+                    Console.WriteLine("\n       Logout and end shift. Do you want to continue?(Y/N)");
                     string yn = "";
+                    Console.Write("       Your chose: ");
                     do
                     {
                         keyInfo = Console.ReadKey(intercept: true);
@@ -187,12 +201,12 @@ namespace ConsoleApp
                         }
                     } while (keyInfo.Key != ConsoleKey.Enter);
                     if(yn == "Y"){
-                        Console.WriteLine("\nExit application.");
+                        Console.WriteLine("\n       Exit application.");
                     }
                     else choose = "1";
                     break;
                 default:
-                    Console.WriteLine("\nWrong Key. Try Again!");
+                    Console.WriteLine("\n       Wrong Key. Try Again!");
                     Console.ReadKey();
                     break;
                 }
@@ -201,56 +215,56 @@ namespace ConsoleApp
         static void Checkin()
         {
             Console.Clear();
-            Console.WriteLine("============================================");
-            Console.WriteLine("          CAR PARKING MANAGEMENT ");
-            Console.WriteLine("============================================");
-            Console.WriteLine("                 Check In");
-            Console.WriteLine("============================================");
+            Console.WriteLine("====================================================================");
+            Console.WriteLine("                     CAR PARKING MANAGEMENT ");
+            Console.WriteLine("====================================================================");
+            Console.WriteLine("                            Check In");
+            Console.WriteLine("====================================================================");
         }
         static void Checkout()
         {
             Console.Clear();
-            Console.WriteLine("============================================");
-            Console.WriteLine("          CAR PARKING MANAGEMENT ");
-            Console.WriteLine("============================================");
-            Console.WriteLine("                 Check Out");
-            Console.WriteLine("============================================");
+            Console.WriteLine("====================================================================");
+            Console.WriteLine("                    CAR PARKING MANAGEMENT ");
+            Console.WriteLine("====================================================================");
+            Console.WriteLine("                           Check Out");
+            Console.WriteLine("====================================================================");
         }
         static void StartShift(){
             Console.Clear();
-            Console.WriteLine("============================================");
-            Console.WriteLine("          CAR PARKING MANAGEMENT ");
-            Console.WriteLine("============================================");
-            Console.WriteLine("                 Start Shift");
-            Console.WriteLine("============================================");
+            Console.WriteLine("====================================================================");
+            Console.WriteLine("                    CAR PARKING MANAGEMENT ");
+            Console.WriteLine("====================================================================");
+            Console.WriteLine("                          Start Shift");
+            Console.WriteLine("====================================================================");
         }
         static void EndShift(){
             Console.Clear();
-            Console.WriteLine("============================================");
-            Console.WriteLine("          CAR PARKING MANAGEMENT ");
-            Console.WriteLine("============================================");
-            Console.WriteLine("                 End Shift");
-            Console.WriteLine("============================================");
+            Console.WriteLine("====================================================================");
+            Console.WriteLine("                   CAR PARKING MANAGEMENT ");
+            Console.WriteLine("====================================================================");
+            Console.WriteLine("                          End Shift");
+            Console.WriteLine("====================================================================");
         }
         static void ShowRevenue(){
             Console.Clear();
-            Console.WriteLine("=========================================");
-            Console.WriteLine("          CAR PARKING MANAGEMENT ");
-            Console.WriteLine("+---------------------------------------+");
-            Console.WriteLine("|              Show Revenue             |");
-            Console.WriteLine("+---------------------------------------+");
+            Console.WriteLine("===================================================================");
+            Console.WriteLine("                   CAR PARKING MANAGEMENT ");
+            Console.WriteLine("+-----------------------------------------------------------------+");
+            Console.WriteLine("|                       Show Revenue                              |");
+            Console.WriteLine("+-----------------------------------------------------------------+");
         }
         static void ShowBill(string checkin, string checkout, int inOutId, int price, string licensePlate)
         {
-            Console.WriteLine("+---------------------------------------+");
-            Console.WriteLine("|              CAR PARKING              |");
-            Console.WriteLine("+---------------------------------------+");
-            Console.WriteLine("|               ID : {0}             |",numb(inOutId, 6));
-            Console.WriteLine("|        License Plate : {0,8}       |",licensePlate);
-            Console.WriteLine("|Check-in time   : {0,21}|",checkin);
-            Console.WriteLine("|Check-out time  : {0,21}|",checkout);
-            Console.WriteLine("|Total price(VND): {0,21}|",price.ToString("0,000"));
-            Console.WriteLine("+---------------------------------------+");
+            Console.WriteLine("+-----------------------------------------------------------------+");
+            Console.WriteLine("|                         CAR PARKING                             |");
+            Console.WriteLine("+-----------------------------------------------------------------+");
+            Console.WriteLine("|                          ID : {0}                            |",numb(inOutId, 6));
+            Console.WriteLine("|                   License Plate : {0,8}                      |",licensePlate);
+            Console.WriteLine("|    Check-in time      : {0,39} |",checkin);
+            Console.WriteLine("|    Check-out time     : {0,39} |",checkout);
+            Console.WriteLine("|    Total price (VND)  : {0,39} |",price.ToString("0,000"));
+            Console.WriteLine("+-----------------------------------------------------------------+");
         }
         static string numb(int n, int len){
             string str = n.ToString(), temp = "";

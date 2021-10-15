@@ -183,7 +183,7 @@ namespace DAL
                 reader = command.ExecuteReader();
                 if(reader.Read())
                 {
-                    hour = 12;
+                    hour = 5;
                 }
                 reader.Close();
             }
@@ -224,7 +224,7 @@ namespace DAL
                 reader = command.ExecuteReader();
                 if(reader.Read())
                 {
-                    hour += 12;
+                    hour += 5;
                 }
                 reader.Close();
                 query = @"select * from CheckInOut where inout_id = '"+inOutId+"' and time(checkin_time)<='18:00';";
@@ -232,7 +232,7 @@ namespace DAL
                 reader = command.ExecuteReader();
                 if(reader.Read())
                 {
-                    hour += 12;
+                    hour += 5;
                 }
                 reader.Close();
                 query = @"select datediff(checkout_time, checkin_time) as date from CheckInOut where inout_id = '"+inOutId+"';";
@@ -240,7 +240,7 @@ namespace DAL
                 reader = command.ExecuteReader();
                 if(reader.Read())
                 {
-                    hour = hour + (reader.GetInt32("date")-1)*12;
+                    hour = hour + (reader.GetInt32("date")-1)*5;
                 }
                 reader.Close();
             }
