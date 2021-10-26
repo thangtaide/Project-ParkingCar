@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "D:\\VTCA\\Project_I\\project1\\Code\\consoleapp\\ConsoleApp.csproj": {}
+    "D:\\VTCA\\Project_I\\project1\\Code\\consoleApp\\ConsoleApp.csproj": {}
   },
   "projects": {
     "D:\\VTCA\\Project_I\\project1\\Code\\BL\\BL.csproj": {
@@ -65,14 +65,14 @@
         }
       }
     },
-    "D:\\VTCA\\Project_I\\project1\\Code\\consoleapp\\ConsoleApp.csproj": {
+    "D:\\VTCA\\Project_I\\project1\\Code\\consoleApp\\ConsoleApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\VTCA\\Project_I\\project1\\Code\\consoleapp\\ConsoleApp.csproj",
+        "projectUniqueName": "D:\\VTCA\\Project_I\\project1\\Code\\consoleApp\\ConsoleApp.csproj",
         "projectName": "ConsoleApp",
-        "projectPath": "D:\\VTCA\\Project_I\\project1\\Code\\consoleapp\\ConsoleApp.csproj",
+        "projectPath": "D:\\VTCA\\Project_I\\project1\\Code\\consoleApp\\ConsoleApp.csproj",
         "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\VTCA\\Project_I\\project1\\Code\\consoleapp\\obj\\",
+        "outputPath": "D:\\VTCA\\Project_I\\project1\\Code\\consoleApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",

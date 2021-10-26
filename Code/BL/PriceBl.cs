@@ -31,7 +31,9 @@ namespace BL
         {
             return dal.getNight(inOutId);
         }
-
+        public int getDays(int inOutId){
+            return dal.getDays(inOutId);
+        }
         public int getDayPrice(int hDay)
         {
             return dal.getDayPrice(hDay);
@@ -43,6 +45,9 @@ namespace BL
         public int getOverNightPrice(int Night)
         {
             return dal.getOverNightPrice(Night);
+        }
+        public int getFullDayPrice(int day){
+            return dal.getFullDayPrice(day);
         }
         public string getCheckinTime(int inOutId){
             return dal.getCheckinTime(inOutId);

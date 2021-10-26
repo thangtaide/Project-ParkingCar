@@ -103,14 +103,6 @@ namespace DAL
                     hour += 12;
                 }
                 reader.Close();
-                query = @"select datediff(checkout_time, checkin_time) as date from CheckInOut where inout_id = '"+inOutId+"';";
-                command.CommandText = query;
-                reader = command.ExecuteReader();
-                if(reader.Read())
-                {
-                    hour = hour + (reader.GetInt32("date")-1)*12;
-                }
-                reader.Close();
             }
             catch { }
             finally
@@ -210,7 +202,7 @@ namespace DAL
                     hour++;
                 }
                 reader.Close();
-                query = @"select hour(timediff(time (checkout_time), '6:00')) as hour from CheckInOut where inout_id = '"+inOutId+"' and time(checkout_time)>'18:00' and time(checkout_time)<='23:00';";
+                query = @"select hour(timediff(time (checkout_time), '18:00')) as hour from CheckInOut where inout_id = '"+inOutId+"' and time(checkout_time)>'18:00' and time(checkout_time)<='23:00';";
                 command.CommandText = query;
                 reader= command.ExecuteReader();
                 if(reader.Read())
@@ -235,14 +227,6 @@ namespace DAL
                     hour += 5;
                 }
                 reader.Close();
-                query = @"select datediff(checkout_time, checkin_time) as date from CheckInOut where inout_id = '"+inOutId+"';";
-                command.CommandText = query;
-                reader = command.ExecuteReader();
-                if(reader.Read())
-                {
-                    hour = hour + (reader.GetInt32("date")-1)*5;
-                }
-                reader.Close();
             }
             catch { }
             finally
@@ -258,21 +242,19 @@ namespace DAL
             {
                 connection.Open();
                 MySqlCommand command = new MySqlCommand("", connection);
-                query = @"select datediff(ADDTIME(checkout_time, '01:00'), ADDTIME(checkin_time, '01:00')) as date from CheckInOut where inout_id = '"+inOutId+"';";
+                query = @"select * from CheckInOut where inout_id = '"+inOutId+"' and time(ADDTIME(checkin_time, '01:00')) < '06:00';";
                 command.CommandText = query;
                 MySqlDataReader reader = command.ExecuteReader();
                 if(reader.Read())
                 {
-                    Night = reader.GetInt32("date");
+                    Night = 1;
                 }
                 reader.Close();
-
-                query = @"select * from CheckInOut where inout_id = '"+inOutId+"' and time(ADDTIME(checkin_time, '01:00')) < '06:00';";
+                query = @"select datediff(ADDTIME(checkout_time, '01:00'), ADDTIME(checkin_time, '01:00')) from CheckInOut where inout_id = '"+inOutId+"';";
                 command.CommandText = query;
-                reader = command.ExecuteReader();
                 if(reader.Read())
                 {
-                    Night ++;
+                    Night = 1;
                 }
                 reader.Close();
             }
@@ -282,6 +264,29 @@ namespace DAL
                 connection.Close();
             }
             return Night;
+        }
+        public int getDays(int inOutId)
+        {
+            int days = 0;
+            try
+            {
+                connection.Open();
+                MySqlCommand command = new MySqlCommand("", connection);
+                query = "select datediff(checkout_time, checkin_time) as date from CheckInOut where inout_id = '"+inOutId+"';";
+                command.CommandText = query;
+                MySqlDataReader reader = command.ExecuteReader();
+                if(reader.Read())
+                {
+                    days += reader.GetInt32("date");
+                }
+                reader.Close();
+            }
+            catch { }
+            finally
+            {
+                connection.Close();
+            }
+            return days;
         }
         public int getDayPrice(int hDay){
             int dPrice = 0;
@@ -351,6 +356,28 @@ namespace DAL
             }
             return overNightPrice;
         }
+        public int getFullDayPrice(int day){
+            int FullDayPrice = 0;
+            try
+            {
+                connection.Open();
+                MySqlCommand command = new MySqlCommand("", connection);
+                query = @"select price from PriceTable where price_id = '4';";
+                command.CommandText = query;
+                MySqlDataReader reader = command.ExecuteReader();
+                if(reader.Read())
+                {
+                    FullDayPrice = reader.GetInt32("price")*day;
+                }
+                reader.Close();
+            }
+            catch { }
+            finally
+            {
+                connection.Close();
+            }
+            return FullDayPrice;
+        }
         public string getCheckinTime(int inOutId){
             string time = "";
             try
@@ -395,6 +422,7 @@ namespace DAL
             }
             return time;
         }
+        
         public string getLicensePlate(int inOutId){
             string licensePlate = "";
             try
