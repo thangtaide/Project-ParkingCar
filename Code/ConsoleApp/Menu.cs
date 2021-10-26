@@ -174,15 +174,19 @@ namespace ConsoleApp
                             {
                                 hDay = pBl.getHoursDayTime(inOutId);
                                 hNight = pBl.getHoursNightTime(inOutId);
+                                Console.WriteLine("One day: " +hDay + " | "+hNight);
+                                Console.ReadKey();
                             }
                             else
                             {
                                 hDay = pBl.getHoursInDay(inOutId);
                                 hNight = pBl.getHoursInNight(inOutId);
                                 fullday = pBl.getDays(inOutId);
+                                Console.WriteLine("Many days: " +hDay + " | "+hNight+" | "+fullday);
+                                Console.ReadKey();
                             }
                             Night = pBl.getNight(inOutId);
-                            price = pBl.getDayPrice(10) + pBl.getNightPrice(3) + pBl.getOverNightPrice(2) + pBl.getFullDayPrice(5);
+                            price = pBl.getDayPrice(hDay) + pBl.getNightPrice(hNight) + pBl.getOverNightPrice(Night) + pBl.getFullDayPrice(fullday);
                             Revenue += price;
                             checkoutNumber++;
                             checkOut.SaveCheckOut(inOutId, price);

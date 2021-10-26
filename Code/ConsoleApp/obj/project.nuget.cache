@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "r7sUgj7h/ASzOPBSL16PGhYYygEksrNIBZk243sO9S7Z6CX+bbhw6/RvEElvD8/gFikJefOppJcV2mBiyXzicA==",
+  "dgSpecHash": "cnBNO6vHumv40fMN6MQZlTqLBDi8SCmjrad016qIBS3426n9Oy+iIDwZajx46SkJqZ7AI6Zo5BQ0AlCtpIyZNw==",
   "success": true,
-  "projectFilePath": "D:\\VTCA\\Project_I\\project1\\Code\\consoleApp\\ConsoleApp.csproj",
+  "projectFilePath": "D:\\VTCA\\Project_I\\project1\\Code\\consoleapp\\ConsoleApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ADMIN\\.nuget\\packages\\bouncycastle.netcore\\1.8.5\\bouncycastle.netcore.1.8.5.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\google.protobuf\\3.14.0\\google.protobuf.3.14.0.nupkg.sha512",
