@@ -192,7 +192,6 @@ namespace ConsoleApp
                             checkOut.SaveCheckOut(inOutId, price);
                             Heading();
                             ShowBill(pBl.getCheckinTime(inOutId), pBl.getCheckoutTime(inOutId), inOutId, price, pBl.getLicensePlate(inOutId));
-                            Console.WriteLine(hDay+" | "+hNight+" | "+fullday +" | "+Night + " | inoutid: "+inOutId);
                         }
                         Console.ReadKey();
                         break;
