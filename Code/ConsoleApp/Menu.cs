@@ -2,7 +2,6 @@
 using BL;
 using System.Collections.Generic;
 using Persistence;
-using DAL;
 
 namespace ConsoleApp
 {
@@ -12,7 +11,6 @@ namespace ConsoleApp
         {
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
-            PriceDal test = new PriceDal();
             int UserId = -1, Revenue = 0, CheckinNumber = 0, checkoutNumber = 0;
             string strID = null, licensePlate = null, strRevenue = null;
             int cardId = -1;
@@ -28,13 +26,13 @@ namespace ConsoleApp
                 Console.WriteLine("                          Login");
                 Console.WriteLine(" ================================================================");
                 UserId = loginU.CheckLogin();
-                if (UserId < 0) Console.WriteLine("      Please try again!");
+                if (UserId < 0) Console.WriteLine("   Please try again!");
                 Console.ReadKey();
             } while (UserId < 0);
             string choose = null;
             while (choose != "4")
             {
-                
+
                 Heading();
                 Console.WriteLine("\n +--------------------------------------------------------------+");
                 Console.WriteLine(" |                     CAR PARKING MANAGEMENT                   |");
@@ -97,6 +95,9 @@ namespace ConsoleApp
                         {
                             if (bl.CheckDailyCard(cardId))
                             {
+                                Heading();
+                                Checkin();
+                                Console.WriteLine("     Card ID: " + numb(cardId,6));
                                 Console.WriteLine("     Daily Card");
                                 licensePlate = checkIn.SaveLicensePlate(cardId);
                                 checkIn.SaveCheckIn(cardId, UserId, licensePlate);
@@ -108,7 +109,7 @@ namespace ConsoleApp
                                 {
                                     Heading();
                                     Checkin();
-                                    Console.WriteLine("     Card ID: " + strID);
+                                    Console.WriteLine("     Card ID: " + numb(cardId,6));
                                     Console.WriteLine("     Monthly Card");
                                     licensePlate = checkIn.CheckLicensePlate(cardId);
                                     if (licensePlate == null)
@@ -136,7 +137,7 @@ namespace ConsoleApp
                     case "2":
                         CheckConsole checkOut = new CheckConsole();
                         strID = null;
-                        int inOutId = -1, hDay = 0, hNight = 0, Night = 0, price = 0, fullday=0;
+                        int inOutId = -1, hDay = 0, hNight = 0, Night = 0, price = 0, fullday = 0;
                         cardId = -1;
                         do
                         {
@@ -160,7 +161,7 @@ namespace ConsoleApp
                             {
                                 Heading();
                                 Checkout();
-                                Console.WriteLine("     Card ID: " + strID);
+                                Console.WriteLine("     Card ID: " + numb(cardId,6));
                                 inOutId = checkOut.CheckOutLicensePlate(cardId);
                                 if (inOutId <= 0)
                                 {
@@ -170,28 +171,41 @@ namespace ConsoleApp
                             } while (inOutId <= 0);
                             checkOut.SaveCheckOutTime(cardId, UserId);
                             Console.ReadKey();
-                            if (pBl.checkManyDays(inOutId))
+                            if (bl.CheckDailyCard(cardId))
                             {
-                                hDay = pBl.getHoursDayTime(inOutId);
-                                hNight = pBl.getHoursNightTime(inOutId);
-                                Console.WriteLine("One day: " +hDay + " | "+hNight);
-                                Console.ReadKey();
-                            }
-                            else
+                                if (pBl.checkManyDays(inOutId))
+                                {
+                                    hDay = pBl.getHoursDayTime(inOutId);
+                                    hNight = pBl.getHoursNightTime(inOutId);
+                                    fullday = pBl.getDays(inOutId);
+                                }
+                                else
+                                {
+                                    hDay = pBl.getHoursInDay(inOutId);
+                                    hNight = pBl.getHoursInNight(inOutId);
+                                }
+                                Night = pBl.getNight(inOutId);
+                                price = pBl.getDayPrice(hDay) + pBl.getNightPrice(hNight) + pBl.getOverNightPrice(Night) + pBl.getFullDayPrice(fullday);
+                                Revenue += price;
+                                checkoutNumber++;
+                                checkOut.SaveCheckOut(inOutId, price);
+                                Heading();
+                                ShowBill(1,pBl.getCheckinTime(inOutId), pBl.getCheckoutTime(inOutId), inOutId, price, pBl.getLicensePlate(inOutId), cardId);
+                            }else
                             {
-                                hDay = pBl.getHoursInDay(inOutId);
-                                hNight = pBl.getHoursInNight(inOutId);
-                                fullday = pBl.getDays(inOutId);
-                                Console.WriteLine("Many days: " +hDay + " | "+hNight+" | "+fullday);
-                                Console.ReadKey();
+                                if(bl.CheckExpiryDate(cardId)){
+                                    Heading();
+                                    ShowBill(2,pBl.getCheckinTime(inOutId), pBl.getCheckoutTime(inOutId), inOutId, 0, pBl.getLicensePlate(inOutId),cardId);
+                                }else
+                                {
+                                    fullday = bl.DaysOutDate(cardId);
+                                    price = pBl.getFullDayPrice(fullday);
+                                    Revenue += price;
+                                    Heading();
+                                    ShowBill(3,pBl.getCheckinTime(inOutId), pBl.getCheckoutTime(inOutId), inOutId, price, pBl.getLicensePlate(inOutId),cardId);
+                                }
+                                checkoutNumber++;
                             }
-                            Night = pBl.getNight(inOutId);
-                            price = pBl.getDayPrice(hDay) + pBl.getNightPrice(hNight) + pBl.getOverNightPrice(Night) + pBl.getFullDayPrice(fullday);
-                            Revenue += price;
-                            checkoutNumber++;
-                            checkOut.SaveCheckOut(inOutId, price);
-                            Heading();
-                            ShowBill(pBl.getCheckinTime(inOutId), pBl.getCheckoutTime(inOutId), inOutId, price, pBl.getLicensePlate(inOutId));
                         }
                         Console.ReadKey();
                         break;
@@ -212,7 +226,7 @@ namespace ConsoleApp
                         }
                         Console.WriteLine(" |     Check-in       :   {0,36}  |", CheckinNumber);
                         Console.WriteLine(" |     Check-out      :   {0,36}  |", checkoutNumber);
-                        Console.WriteLine(" |     Revenue (VND)  :   {0,33}VND  |", strRevenue);
+                        Console.WriteLine(" |     Revenue (VND)  :   {0,32} VND  |", strRevenue);
                         Console.WriteLine(" +--------------------------------------------------------------+");
                         Console.ReadKey();
                         break;
@@ -232,7 +246,7 @@ namespace ConsoleApp
                                 yn = yn.ToUpper();
                                 Console.Write(s.ToUpper());
                             }
-                            else if ( yn == "Y" &&(keyInfo.KeyChar == 'N' || keyInfo.KeyChar == 'n') && yn.Length == 1)
+                            else if (yn == "Y" && (keyInfo.KeyChar == 'N' || keyInfo.KeyChar == 'n') && yn.Length == 1)
                             {
                                 Console.Write("\b \b");
                                 yn = yn[0..^1];
@@ -242,7 +256,7 @@ namespace ConsoleApp
                                 yn = yn.ToUpper();
                                 Console.Write(s.ToUpper());
                             }
-                            else if ( yn == "N" && (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y') && yn.Length == 1)
+                            else if (yn == "N" && (keyInfo.KeyChar == 'Y' || keyInfo.KeyChar == 'y') && yn.Length == 1)
                             {
                                 Console.Write("\b \b");
                                 yn = yn[0..^1];
@@ -293,26 +307,36 @@ namespace ConsoleApp
             Console.WriteLine(" |                       Show Revenue                           |");
             Console.WriteLine(" +--------------------------------------------------------------+");
         }
-        static void ShowBill(string checkin, string checkout, int inOutId, int price, string licensePlate)
+        static void ShowBill(int i, string checkin, string checkout, int inOutId, int price, string licensePlate, int cardId)
         {
+            PriceBl pBl = new PriceBl();
             Console.WriteLine();
             Console.WriteLine(" +--------------------------------------------------------------+");
             Console.WriteLine(" |                         CAR PARKING                          |");
             Console.WriteLine(" +--------------------------------------------------------------+");
-            Console.WriteLine(" |                          ID : {0}                         |", numb(inOutId, 6));
+            Console.WriteLine(" |                         ID : {0}                          |", numb(inOutId, 6));
             Console.WriteLine(" |                   License Plate : {0,8}                   |", licensePlate);
+            if(i==1) Console.WriteLine(" |                          Daily Card                          |");
+            else if(i ==2){
+                Console.WriteLine(" |                         Monthly Card                         |");
+                Console.WriteLine(" |    Expiry Date        : {0,33}    |", pBl.getExpiryDate(cardId));
+            }
+            else if(i ==3){
+                Console.WriteLine(" |                    Monthly Card (out date)                   |");
+                Console.WriteLine(" |    Expiry Date        : {0,33}    |", pBl.getExpiryDate(cardId));
+            }
             Console.WriteLine(" |    Check-in time      : {0,33}    |", checkin);
             Console.WriteLine(" |    Check-out time     : {0,33}    |", checkout);
-            Console.WriteLine(" |    Total price (VND)  : {0,30}VND    |", price.ToString("0,000"));
+            Console.WriteLine(" |    Total price (VND)  : {0,29} VND    |", price.ToString("0,000"));
             Console.WriteLine(" +--------------------------------------------------------------+");
         }
         static void Heading()
         {
             Console.Clear();
             Console.WriteLine(" ================================================================");
-            Console.WriteLine("                   CAR PARKING MANAGEMENT              ");
-            Console.WriteLine("             PF11 - Hoàng Gia Luân - Bùi Phương Dung");
-            Console.WriteLine("                 Teacher: Nguyễn Xuân Sinh");
+            Console.WriteLine("                      CAR PARKING MANAGEMENT              ");
+            Console.WriteLine("                PF11 - Hoàng Gia Luân - Bùi Phương Dung");
+            Console.WriteLine("                    Teacher: Nguyễn Xuân Sinh");
             Console.WriteLine(" ================================================================");
         }
         static string numb(int n, int len)

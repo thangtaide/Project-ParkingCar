@@ -242,7 +242,7 @@ namespace DAL
             {
                 connection.Open();
                 MySqlCommand command = new MySqlCommand("", connection);
-                query = @"select * from CheckInOut where inout_id = '"+inOutId+"' and time(ADDTIME(checkin_time, '01:00')) < '06:00';";
+                query = @"select * from CheckInOut where inout_id = '"+inOutId+"' and time(ADDTIME(checkin_time, '01:00')) < '07:00';";
                 command.CommandText = query;
                 MySqlDataReader reader = command.ExecuteReader();
                 if(reader.Read())
@@ -252,9 +252,12 @@ namespace DAL
                 reader.Close();
                 query = @"select datediff(ADDTIME(checkout_time, '01:00'), ADDTIME(checkin_time, '01:00')) from CheckInOut where inout_id = '"+inOutId+"';";
                 command.CommandText = query;
+                reader = command.ExecuteReader();
                 if(reader.Read())
                 {
-                    Night = 1;
+                    if(reader.GetInt32("date")>0){
+                        Night = 1;
+                    }
                 }
                 reader.Close();
             }
@@ -277,7 +280,7 @@ namespace DAL
                 MySqlDataReader reader = command.ExecuteReader();
                 if(reader.Read())
                 {
-                    days += reader.GetInt32("date");
+                    days = reader.GetInt32("date") -1;
                 }
                 reader.Close();
             }
@@ -421,6 +424,28 @@ namespace DAL
                 connection.Close();
             }
             return time;
+        }
+        public string getExpiryDate(int cardId){
+            string date = "";
+            try
+            {
+                connection.Open();
+                MySqlCommand command = new MySqlCommand("", connection);
+                query = @"select expiry_date from ParkingCards where card_id = '"+cardId+"';";
+                command.CommandText = query;
+                MySqlDataReader reader = command.ExecuteReader();
+                if(reader.Read())
+                {
+                    date = reader.GetString("expiry_date");
+                }
+                reader.Close();
+            }
+            catch { }
+            finally
+            {
+                connection.Close();
+            }
+            return date;
         }
         
         public string getLicensePlate(int inOutId){

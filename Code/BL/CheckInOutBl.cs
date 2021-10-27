@@ -34,6 +34,9 @@ namespace BL
         public int CheckOutLicensePlate(int id, string licensePlate){
             return outDal.CheckOutLicensePlate(id, licensePlate);
         }
+        public int DaysOutDate(int id){
+            return outDal.DaysOutDate(id);
+        }
         public bool SaveCheckOutTime(int cardId, int UserId ){
             return outDal.SaveCheckOutTime(cardId, UserId) > 0;
         }

@@ -26,6 +26,22 @@ namespace DAL
             }
             return licensePlateReturn;
         }
+        public int DaysOutDate(int id){
+            int days = 0;
+            try{
+                MySqlConnection connection = DbHelper.OpenConnection();
+                string query = "select datediff(CURRENT_DATE(),expiry_date) as days from ParkingCards where card_id='"+id+"';";
+                MySqlDataReader reader = DbHelper.ExecQuery(query);
+                if(reader.Read()){
+                    days = reader.GetInt32("days");
+                }
+                reader.Close();
+                connection.Close();
+            }catch{
+                days = ERROR;
+            }
+            return days;
+        }
         public int SaveCheckOutTime(int cardId, int UserId)
         {
             int SaveReturn;

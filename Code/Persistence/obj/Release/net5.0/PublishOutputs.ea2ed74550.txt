@@ -1,0 +1,3 @@
+D:\VTCA\Project_I\project1\Code\ConsoleApp\bin\Release\Persistence.dll
+D:\VTCA\Project_I\project1\Code\ConsoleApp\bin\Release\Persistence.deps.json
+D:\VTCA\Project_I\project1\Code\ConsoleApp\bin\Release\Persistence.pdb

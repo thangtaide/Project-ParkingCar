@@ -1,0 +1,15 @@
+D:\VTCA\Project_I\project1\Code\DAL\bin\Release\net5.0\DAL.deps.json
+D:\VTCA\Project_I\project1\Code\DAL\bin\Release\net5.0\DAL.dll
+D:\VTCA\Project_I\project1\Code\DAL\bin\Release\net5.0\ref\DAL.dll
+D:\VTCA\Project_I\project1\Code\DAL\bin\Release\net5.0\DAL.pdb
+D:\VTCA\Project_I\project1\Code\DAL\bin\Release\net5.0\Persistence.dll
+D:\VTCA\Project_I\project1\Code\DAL\bin\Release\net5.0\Persistence.pdb
+D:\VTCA\Project_I\project1\Code\DAL\obj\Release\net5.0\DAL.csproj.AssemblyReference.cache
+D:\VTCA\Project_I\project1\Code\DAL\obj\Release\net5.0\DAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\VTCA\Project_I\project1\Code\DAL\obj\Release\net5.0\DAL.AssemblyInfoInputs.cache
+D:\VTCA\Project_I\project1\Code\DAL\obj\Release\net5.0\DAL.AssemblyInfo.cs
+D:\VTCA\Project_I\project1\Code\DAL\obj\Release\net5.0\DAL.csproj.CoreCompileInputs.cache
+D:\VTCA\Project_I\project1\Code\DAL\obj\Release\net5.0\DAL.csproj.CopyComplete
+D:\VTCA\Project_I\project1\Code\DAL\obj\Release\net5.0\DAL.dll
+D:\VTCA\Project_I\project1\Code\DAL\obj\Release\net5.0\ref\DAL.dll
+D:\VTCA\Project_I\project1\Code\DAL\obj\Release\net5.0\DAL.pdb

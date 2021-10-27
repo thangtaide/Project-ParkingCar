@@ -42,7 +42,7 @@ create table ParkingCards(
     color nvarchar(15),
     descrip nvarchar(255),
     customer_id int,
-    expiry_date date not null,
+    expiry_date datetime,
     constraint fk_ParkingCard_Customer foreign key(customer_id) references RegularCustomers(customer_id)
 );
 
@@ -66,29 +66,30 @@ create table CheckInOut(
 insert into RegularCustomers(regular_name, email, phone_number) values
 ('Nguyen Van A', 'nvA@gmail.com', '0123456789'),
 ('Nguyen Van B', 'nvB@gmail.com', '0987654321'),
-('Nguyen Thi C', 'ntC@gmail.com', '0159786324');
+('Nguyen Thi C', 'ntC@gmail.com', '0159786324'),
+('Nguyen Thi D', 'ntC@gmail.com', '0159786324');
 
 insert into ParkingCards(vehicle_number, vehicle_type, color, customer_id, descrip, expiry_date) values
-('37A178', 'Way', 'Red', 001, null, '2008-11-11'),
-('37B178', 'Way', 'Blue', 002, null, '2021-11-11'),
-('37C178', 'Way', 'Blue', null, 'dayCard', '2008-11-11'),
-('37D178', 'Way', 'Blue', null, 'dayCard', '2008-11-11'),
-('37E178', 'Way', 'Blue', null, 'dayCard', '2008-11-11'),
-('37F178', 'Way', 'Blue', 003, null, '2021-11-11'),
-('37g178', 'Way', 'Blue', null, 'dayCard', '2008-11-11');
+('37A178', 'Way', 'Red', 001, null, '2021-10-22 00:00:00'),
+('37B178', 'Way', 'Blue', 002, null, '2021-11-20 00:00:00'),
+(null, null, null, null, 'dayCard', null),
+(null, null, null, null, 'dayCard', null),
+(null, null, null, null, 'dayCard', null),
+(null, null, null, null, 'dayCard', null),
+('37e178', 'Way', 'Blue', 003, null, '2021-11-25 00:00:00'),
+('37f178', 'Way', 'Blue', 004, null, '2021-10-20 00:00:00');
 
 insert into CheckInOut(card_id, checkin_time, checkin_user_id, vehicle_number, checkout_time, total) values 
-('002','2021-10-07 14:05:00','2','37d178', null, null),
-('003','2021-10-15 22:45:00','1','37b178', null, null),
-('004','2021-10-15 17:25:00','1','37f178', null, null);
+('001','2021-10-17 14:05:00','2','37a178', null, null),
+('002','2021-10-19 18:05:00','2','37b178', null, null),
+('003','2021-10-15 22:45:00','1','37c178', null, null),
+('004','2021-10-15 17:25:00','1','37d178', null, null),
+('007','2021-10-18 19:45:00','1','37e178', null, null),
+('008', '2021-10-20 21:25:00','2', '37F178',null, null);
 
 insert into PriceTable(time_min, time_max, price, decription) values 
 ('06:00','17:59', '25000', 'Per hour'),
 ('18:00','22:59', '35000', 'Per hour'),
 ('23:00','05:59', '100000', 'morning x 4'),
 ('00:00','23:59', '200000', 'Full day');
-
-select * from checkinout;
-select datediff(checkout_time, checkin_time) as date from CheckInOut where inout_id = '3';
-select datediff(ADDTIME(checkout_time, '01:00'), ADDTIME(checkin_time, '01:00')) from CheckInOut where inout_id = '3';
-select hour(timediff( '23:00', time (checkin_time))) as hour from CheckInOut where inout_id = '3';
+select expiry_date from ParkingCards where descrip is null;

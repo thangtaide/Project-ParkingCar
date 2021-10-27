@@ -58,5 +58,8 @@ namespace BL
         public string getLicensePlate(int inOutId){
             return dal.getLicensePlate(inOutId);
         }
+        public string getExpiryDate(int cardId){
+            return dal.getExpiryDate(cardId);
+        }
     }
 }
